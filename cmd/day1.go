@@ -17,11 +17,10 @@ func main() {
 	}
 	leftSorted := sortList(left)
 	rightSorted := sortList(right)
-	sum, err := findSum(leftSorted, rightSorted)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	fmt.Println(sum)
+	sum := findSum(leftSorted, rightSorted)
+	fmt.Printf("sum: %v\n", sum)
+	similarity := findSimilarity(left, right)
+	fmt.Printf("similarity: %v\n", similarity)
 }
 
 func readFile() ([]uint, []uint, error) {
@@ -54,6 +53,10 @@ func readFile() ([]uint, []uint, error) {
 		return nil, nil, err
 	}
 
+	if len(left) != len(right) {
+		return nil, nil, fmt.Errorf("sorted list are not the same length bub")
+	}
+
 	return left, right, err
 }
 
@@ -68,11 +71,8 @@ func sortList(slice []uint) []uint {
 	return sorted
 }
 
-func findSum(leftSorted []uint, rightSorted []uint) (uint, error) {
+func findSum(leftSorted []uint, rightSorted []uint) uint {
 	var sum uint
-	if len(leftSorted) != len(rightSorted) {
-		return 0, fmt.Errorf("sorted list are not the same length bub")
-	}
 	for i, v := range leftSorted {
 		if leftSorted[i] > rightSorted[i] {
 			sum += v - rightSorted[i]
@@ -80,9 +80,21 @@ func findSum(leftSorted []uint, rightSorted []uint) (uint, error) {
 			sum += rightSorted[i] - v
 		}
 	}
-	return sum, nil
+	return sum
 }
 
-func findSimilarity() uint {
-	return 1
+func findSimilarity(left []uint, right []uint) uint {
+	var similarity uint
+	similarityMap := map[uint]uint{}
+	for _, vl := range left {
+		for _, vr := range right {
+			if vl == vr {
+				similarityMap[vl] = similarityMap[vl] + 1
+			}
+		}
+	}
+	for num, reps := range similarityMap {
+		similarity += num * reps
+	}
+	return similarity
 }
