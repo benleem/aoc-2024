@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	left, right, err := readFile()
+	left, right, err := readInput()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -23,7 +23,7 @@ func main() {
 	fmt.Printf("similarity: %v\n", similarity)
 }
 
-func readFile() ([]uint, []uint, error) {
+func readInput() ([]uint, []uint, error) {
 	var left []uint
 	var right []uint
 
